@@ -49,7 +49,7 @@ var eButton=document.querySelector('#eButton'),
 						// html += '\n';
 						// html += 'Completed: ' + (todos[i].completed ? 'YES' : 'NO');
 						// html += '\n';
-						html += '<li data-index="'+i+'"><input type="checkbox" '+(todos[i].completed ? 'checked' : '' )+'/>' + todos[i].title + '</li>';
+						html += '<li data-index="'+i+'"><input type="checkbox" '+(todos[i].completed ? 'checked' : '' )+'/>' + todos[i].title + '<input type="button" value="x" class="close"/></li>';
 
 					}
 				document.getElementById('list-holder').innerHTML = html;
@@ -89,22 +89,37 @@ var eButton=document.querySelector('#eButton'),
 
 	todoList.addEventListener('click', function (e){
 		var list,
-		    todoIndex;
+		    todoIndex,isDeleting = false;
 		//console.log(e.target.tagName);
 
 		if(e.target.tagName === 'INPUT') {
+			isDeleting = e.target.type === 'button';
 			list = e.target.parentNode;
 		} else {
 			list = e.target;
 		}
 		todoIndex = list.getAttribute('data-index');
+
+
+if(isDeleting) {
+	removeTodo(todoIndex);
+
+} else {
 		toggleCompleted(todoIndex);
+}
+	
 		//console.log(list.getAttribute('data-index'));
 	})
 
 
 	function toggleCompleted(todoIndex){
 		todos[todoIndex].completed = !todos[todoIndex].completed;
+		setDataToLocalStorage(KEY, todos);
+		renderList();
+	}
+
+	function removeTodo(todoIndex){
+		todos.splice(todoIndex, 1);
 		setDataToLocalStorage(KEY, todos);
 		renderList();
 	}

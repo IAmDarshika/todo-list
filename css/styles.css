@@ -55,9 +55,10 @@ ul li:hover {
 .addBtn:hover {
   background-color: #bbb;
 }
-.close:hover {
+.close{
     background-color: #f44336;
     color: white;
+    float: right;
 }
 
 input[type="checkbox"]:checked + span{
