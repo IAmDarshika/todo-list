@@ -1,6 +1,7 @@
 var todos , KEY = 'app-todos' ;
 var eButton=document.querySelector('#eButton'),
-	todoText=document.querySelector('#todoText') ;						;
+	todoText=document.querySelector('#todoText'),
+	todoList = document.querySelector('#list-holder') ;						
 
 
 
@@ -48,7 +49,7 @@ var eButton=document.querySelector('#eButton'),
 						// html += '\n';
 						// html += 'Completed: ' + (todos[i].completed ? 'YES' : 'NO');
 						// html += '\n';
-						html += '<li><input type="checkbox" '+(todos[i].completed ? 'checked' : '' )+'/>' + todos[i].title + '</li>';
+						html += '<li data-index="'+i+'"><input type="checkbox" '+(todos[i].completed ? 'checked' : '' )+'/>' + todos[i].title + '</li>';
 
 					}
 				document.getElementById('list-holder').innerHTML = html;
@@ -78,7 +79,7 @@ var eButton=document.querySelector('#eButton'),
 	});
 
 
-	todoText.addEventListener('keydown',function(e){
+	todoText.addEventListener('keydown',function (e){
   	if(e.keyCode==13)
     {
       newElement();
@@ -86,4 +87,25 @@ var eButton=document.querySelector('#eButton'),
 
 	});
 
+	todoList.addEventListener('click', function (e){
+		var list,
+		    todoIndex;
+		//console.log(e.target.tagName);
+
+		if(e.target.tagName === 'INPUT') {
+			list = e.target.parentNode;
+		} else {
+			list = e.target;
+		}
+		todoIndex = list.getAttribute('data-index');
+		toggleCompleted(todoIndex);
+		//console.log(list.getAttribute('data-index'));
+	})
+
+
+	function toggleCompleted(todoIndex){
+		todos[todoIndex].completed = !todos[todoIndex].completed;
+		setDataToLocalStorage(KEY, todos);
+		renderList();
+	}
 	renderList();
