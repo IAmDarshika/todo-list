@@ -41,7 +41,7 @@ function renderList() {
   } 
   else {
      for (var i = 0; i < todos.length; i++) {
-      html += '<li data-index="' + i + '"><input type="checkbox" ' + (todos[i].completed ? 'checked' : '') + '/>' + todos[i].title + '<input type="button" value="&#xd7;" class="close"/></li>';
+      html += '<li data-index="' + i + '"><input type="checkbox" ' + (todos[i].completed ? 'checked' : '') + '/>' + '<span>' + todos[i].title + '</span>' +'<input type="button" value="&#xd7;" class="close"/></li>';
     }
     document.getElementById('list-holder').innerHTML = html;
   }
