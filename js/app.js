@@ -79,7 +79,7 @@ todoList.addEventListener('click', function (e) {
     todoIndex, isDeleting = false;
   //console.log(e.target.tagName);
 
-  if (e.target.tagName === 'INPUT') {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SPAN') {
     isDeleting = e.target.type === 'button';
     list = e.target.parentNode;
   } else {
