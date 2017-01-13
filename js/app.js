@@ -36,13 +36,14 @@ function addTodo(todo) {
 
 function renderList() {
   var html = '';
-  if (todos.length) {
-    for (var i = 0; i < todos.length; i++) {
+  if (!todos) {
+   console.log('No todos');
+  } 
+  else {
+     for (var i = 0; i < todos.length; i++) {
       html += '<li data-index="' + i + '"><input type="checkbox" ' + (todos[i].completed ? 'checked' : '') + '/>' + todos[i].title + '<input type="button" value="&#xd7;" class="close"/></li>';
     }
     document.getElementById('list-holder').innerHTML = html;
-  } else {
-    console.log('No todos');
   }
 }
 
