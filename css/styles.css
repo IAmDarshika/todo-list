@@ -1,68 +1,162 @@
-/* Include the padding and border in an element's total width and height */
+body {
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+}
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+button {
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: 0;
+  background: none;
+}
+a {
+  text-decoration: none;
+  margin: 0;
+  color: inherit;
+}
+ul,
+ol,
+li {
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: inline-block;
+}
+:focus {
+  outline: 0;
 }
 
 /* Remove margins and padding from the list */
+
 ul {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+}
+ul.orderDsc {
+  flex-direction: column-reverse;
 }
 
 /* Style the list items */
-ul li {
-    cursor: pointer;
-    position: relative;
-    padding: 12px 8px 12px 40px;
-    background: #eee;
-    font-size: 18px;
-    transition: 0.2s;
 
-    /* make the list items unselectable */
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+ul li {
+  cursor: pointer;
+  position: relative;
+  padding: 12px 8px 12px 40px;
+  background: #eee;
+  font-size: 18px;
+  transition: 0.2s;
+  display: flex;
+  color: black;
+  /* make the list items unselectable */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+html,
+body {
+  height: 100%;
 }
 
 /* Set all odd list items to a different color (zebra-stripes) */
+
 ul li:nth-child(odd) {
-    background: #f9f9f9;
+  background: #f9f9f9;
 }
 
 /* Darker background-color on hover */
+
 ul li:hover {
-    background: #ddd;
+  background: #ddd;
+}
+li {
+  display: flex;
+  align-items: center;
 }
 .header {
-    background-color: #f44336;
-    padding: 30px 40px;
-    color: white;
-    text-align: center;
+  background-color: #34495e;
+  padding: 30px 40px;
+  color: white;
+  text-align: center;
+  height: 100%;
+}
+body {
+  font-family: 'Open Sans', sans-serif;
 }
 
 /* Clear floats after the header */
-.header:after {
-    content: "";
-    display: table;
-    clear: both;
-}
 
+.header:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+main {
+  max-width: 674px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 /* Style the "Add" button */
 
-
+.todoList {
+  display: flex;
+  flex-wrap: wrap;
+}
+h2 {
+  width: 100%;
+  padding-bottom: 20px;
+  font-family: 'Gloria Hallelujah', cursive;
+  font-size: 30px;
+}
 .addBtn:hover {
   background-color: #bbb;
 }
-.close{
-    background-color: #f44336;
-    color: white;
-    float: right;
+.close {
+  background-color: #f44336;
+  color: white;
+  margin-left: auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  border: none;
+  font-size: 18px;
 }
-
-input[type="checkbox"]:checked + span{
+input[type="text"] {
+  padding: 12px 8px 12px 40px;
+  width: 80%;
+  font-family: inherit;
+  font-size: 18px;
+}
+input[type="checkbox"]:checked + span {
   text-decoration: line-through;
+}
+button {
+  padding: 12px 8px 12px 8px;
+  background: #d9d9d9;
+  color: #555;
+  flex: 1;
+  font-family: inherit;
+  font-size: 18px;
 }
 
 /*# sourceMappingURL=../sourceMaps_css/styles.css.map */
