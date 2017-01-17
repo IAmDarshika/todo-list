@@ -1,24 +1,18 @@
-'use strict';
-
-var todos, checkTask= 0 , KEY = 'app-todos';
+var todos, KEY = 'app-todos';
 var eButton = document.querySelector('#eButton'),
   todoText = document.querySelector('#todoText'),
   todoList = document.querySelector('#list-holder'),
-  countPara = document.querySelector('#counterPara') ;
-
-
+  todoStatus = document.querySelector('#todo-status');
 
 function getDataFromLocalStorage(key) {
   var item = localStorage.getItem(key);
   console.log(item);
   return JSON.parse(item);
-  
 }
 
 function setDataToLocalStorage(key, obj) {
   var strObj = JSON.stringify(obj);
   localStorage.setItem(key, strObj);
-  
 }
 
 
@@ -43,13 +37,22 @@ function renderList() {
   var html = '';
   if (!todos) {
    console.log('No todos');
+   todoStatus.innerHTML = 'No todos';
+   return;
   } 
-  else {
-     for (var i = 0; i < todos.length; i++) {
-      html += '<li data-index="' + i + '"><input type="checkbox" ' + (todos[i].completed ? 'checked' : '') + '/>' + '<span>' + todos[i].title + '</span>' +'<input type="button" value="&#xd7;" class="close"/></li>';
+  
+  // todo status
+  var status = '', completedCount = 0;
+
+  for (var i = 0; i < todos.length; i++) {
+    html += '<li data-index="' + i + '"><input type="checkbox" ' + (todos[i].completed ? 'checked' : '') + '/>' + '<span>' + todos[i].title + '</span>' +'<input type="button" value="&#xd7;" class="close"/></li>';
+    if (todos[i].completed) {
+      completedCount++;
     }
-    document.getElementById('list-holder').innerHTML = html;
   }
+  document.getElementById('list-holder').innerHTML = html;
+
+  todoStatus.innerHTML = (todos.length ? '(' + completedCount + ' of ' + todos.length + ' task completed)' : 'No todos');
 }
 
 function newElement() {
@@ -69,14 +72,12 @@ function newElement() {
 eButton.addEventListener('click', function (e) {
 
   newElement();
-  countElements();
 });
 
 
 todoText.addEventListener('keydown', function (e) {
   if (e.keyCode == 13) {
     newElement();
-    countElements();
   }
 
 });
@@ -96,13 +97,13 @@ todoList.addEventListener('click', function (e) {
 
 
   if (isDeleting) {
-
     removeTodo(todoIndex);
 
   } else {
     toggleCompleted(todoIndex);
   }
-  
+
+  //console.log(list.getAttribute('data-index'));
 })
 
 
@@ -110,27 +111,11 @@ function toggleCompleted(todoIndex) {
   todos[todoIndex].completed = !todos[todoIndex].completed;
   setDataToLocalStorage(KEY, todos);
   renderList();
-  countElements();
-
 }
 
 function removeTodo(todoIndex) {
-  
   todos.splice(todoIndex, 1);
   setDataToLocalStorage(KEY, todos);
   renderList();
-  countElements();
-  
-}
-
-function countElements(todoIndex){
-  var count, 
-      result = 0;
-   count = document.querySelectorAll('input[type="checkbox"]').length ;
-   checkTask = document.querySelectorAll('input[checked]').length ;
-   result= count - checkTask ;
-   counterPara.textContent = "("+ result + " of " + count + " task remaining)" ;
-
 }
 renderList();
-countElements();
