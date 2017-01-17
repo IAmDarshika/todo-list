@@ -1,9 +1,8 @@
 var todos, KEY = 'app-todos';
 var eButton = document.querySelector('#eButton'),
   todoText = document.querySelector('#todoText'),
-  todoList = document.querySelector('#list-holder');
-
-
+  todoList = document.querySelector('#list-holder'),
+  todoStatus = document.querySelector('#todo-status');
 
 function getDataFromLocalStorage(key) {
   var item = localStorage.getItem(key);
@@ -38,13 +37,22 @@ function renderList() {
   var html = '';
   if (!todos) {
    console.log('No todos');
+   todoStatus.innerHTML = 'No todos';
+   return;
   } 
-  else {
-     for (var i = 0; i < todos.length; i++) {
-      html += '<li data-index="' + i + '"><input type="checkbox" ' + (todos[i].completed ? 'checked' : '') + '/>' + '<span>' + todos[i].title + '</span>' +'<input type="button" value="&#xd7;" class="close"/></li>';
+  
+  // todo status
+  var status = '', completedCount = 0;
+
+  for (var i = 0; i < todos.length; i++) {
+    html += '<li data-index="' + i + '"><input type="checkbox" ' + (todos[i].completed ? 'checked' : '') + '/>' + '<span>' + todos[i].title + '</span>' +'<input type="button" value="&#xd7;" class="close"/></li>';
+    if (todos[i].completed) {
+      completedCount++;
     }
-    document.getElementById('list-holder').innerHTML = html;
   }
+  document.getElementById('list-holder').innerHTML = html;
+
+  todoStatus.innerHTML = (todos.length ? '(' + completedCount + ' of ' + todos.length + ' task completed)' : 'No todos');
 }
 
 function newElement() {
