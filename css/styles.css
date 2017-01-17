@@ -129,12 +129,13 @@ h2 {
   font-size: 30px;
 }
 
-.counterPara{
- 
-  font-size: 16px;
-  width: 100%;
-  padding-bottom: 20px;
-}
+#todo-status{
+  display: flex;
+  padding-right: 200px;
+  padding-bottom: 10px;
+  padding-left: 250px;
+} 
+
 .addBtn:hover {
   background-color: #bbb;
 }
