@@ -45,7 +45,7 @@ function renderList() {
   var status = '', completedCount = 0;
 
   for (var i = 0; i < todos.length; i++) {
-    html += '<li data-index="' + i + '"><input type="checkbox" ' + (todos[i].completed ? 'checked' : '') + '/>' + '<span>' + todos[i].title + '</span>' +'<input type="button" value="&#xd7;" class="close"/></li>';
+    html += '<li data-index="' + todos[i].id + '"><input type="checkbox" ' + (todos[i].completed ? 'checked' : '') + '/>' + '<span>' + todos[i].title + '</span>' +'<input type="button" value="&#xd7;" class="close"/></li>';
     if (todos[i].completed) {
       completedCount++;
     }
@@ -109,19 +109,35 @@ todoList.addEventListener('click', function (e) {
 })
 
 
-function toggleCompleted(todoIndex) {
-  todos[todoIndex].completed = !todos[todoIndex].completed;
+function toggleCompleted(todoId) {
+  for (var i = 0; i < todos.length; i++) {
+    if(todos[i].id === todoId){
+      todos[i].completed = !todos[i].completed;
+      break;
+    }
+  }
+  
   setDataToLocalStorage(KEY, todos);
   renderList();
 }
 
-function removeTodo(todoIndex) {
-  todos.splice(todoIndex, 1);
-  setDataToLocalStorage(KEY, todos);
-  renderList();
+function removeTodo(todoId) {
+  var todoIndex;
+  for (var i = 0; i < todos.length; i++) {
+    if(todos[i].id === todoId){
+      todoIndex = i;
+      break;
+    }
+  }
+  if(todoIndex !== undefined){
+    todos.splice(todoIndex, 1);
+    setDataToLocalStorage(KEY, todos);
+    renderList();
+  }
 }
+
 
 function getKey(){
-  
+  return Math.random().toString(36); 
 }
 renderList();
