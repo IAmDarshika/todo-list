@@ -34,7 +34,7 @@ function addTodo(todo) {
 }
 
 function renderList() {
-  var html = '';
+  var html = [];
   if (!todos) {
    console.log('No todos');
    todoStatus.innerHTML = 'No todos';
@@ -42,15 +42,32 @@ function renderList() {
   } 
   
   // todo status
-  var status = '', completedCount = 0;
-
+  var status = '', completedCount = 0 ;
+  todos.sort(function (a,b) {
+    if(a.order < b.order){
+      return -1;
+    }
+    else if(a.order > b.order){
+      return 1;
+    }
+    return 0;
+  });
   for (var i = 0; i < todos.length; i++) {
-    html += '<li data-index="' + todos[i].id + '"><input type="checkbox" ' + (todos[i].completed ? 'checked' : '') + '/>' + '<span>' + todos[i].title + '</span>' +'<input type="button" value="&#xd7;" class="close"/></li>';
+    html.push([
+      '<li data-index="' + todos[i].id + '">',
+       '<input type="button" value ="up" class="up"/>',
+        '<input type="button" value ="down" class="down"/>',
+        '<input type="checkbox" ' + (todos[i].completed ? 'checked' : '') + '/>',
+        '<span>' + todos[i].title + '</span>',
+        '<input type="button" value="&#xd7;" class="close"/>',
+      '</li>'
+    ].join(''));
     if (todos[i].completed) {
       completedCount++;
     }
   }
-  document.getElementById('list-holder').innerHTML = html;
+
+  document.getElementById('list-holder').innerHTML = html.join('');
 
   todoStatus.innerHTML = (todos.length ? '(' + completedCount + ' of ' + todos.length + ' task completed)' : 'No todos');
 }
@@ -86,11 +103,13 @@ todoText.addEventListener('keydown', function (e) {
 
 todoList.addEventListener('click', function (e) {
   var list,
-    todoIndex, isDeleting = false;
+    todoIndex, isDeleting = false, isUp = false , isDown = false;
   //console.log(e.target.tagName);
 
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SPAN') {
-    isDeleting = e.target.type === 'button';
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SPAN' ) {
+    isDeleting = e.target.type === 'button' && e.target.classList.contains('close');
+    isUp = e.target.type === 'button' && e.target.classList.contains('up');
+    isDown = e.target.type === 'button' && e.target.classList.contains('down');
     list = e.target.parentNode;
   } else {
     list = e.target;
@@ -100,8 +119,12 @@ todoList.addEventListener('click', function (e) {
 
   if (isDeleting) {
     removeTodo(todoIndex);
-
-  } else {
+  } else if (isUp){
+    upTodo(todoIndex);
+  } else if (isDown){
+    downTodo(todoIndex);
+  }
+  else {
     toggleCompleted(todoIndex);
   }
 
@@ -136,6 +159,34 @@ function removeTodo(todoId) {
   }
 }
 
+function upTodo(todoId){
+  for (var i = 0; i < todos.length; i++) {
+    if(todos[i].id === todoId){
+      todos[i].order++;
+      break;
+    }
+  }
+
+  setDataToLocalStorage(KEY, todos);
+  renderList();
+  
+}
+
+function downTodo(todoId){
+  for (var i = 0; i < todos.length; i++) {
+    if(todos[i].id === todoId){
+      todos[i].order--;
+      if(todos[i].order < 0){
+        todos[i].order = 0;
+      }
+      break;
+    }
+  }
+  
+  setDataToLocalStorage(KEY, todos);
+  renderList();
+  
+}
 
 function getKey(){
   return Math.random().toString(36); 
