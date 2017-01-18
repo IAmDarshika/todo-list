@@ -62,8 +62,10 @@ function newElement() {
     return;
   }
   var newTodoObject = {
+    id: getKey(),
     title: newTodoText,
-    completed: false
+    completed: false,
+    order: 0
   }; //initialise object
 
   addTodo(newTodoObject);
@@ -117,5 +119,9 @@ function removeTodo(todoIndex) {
   todos.splice(todoIndex, 1);
   setDataToLocalStorage(KEY, todos);
   renderList();
+}
+
+function getKey(){
+  
 }
 renderList();
