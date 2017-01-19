@@ -28,6 +28,11 @@ console.log(todos);
 
 function addTodo(todo) {
   todos.push(todo);
+
+  for (var i = todos.length-1; i >= 0; i--) {
+    todos[i].order = i;
+  }
+
   setDataToLocalStorage(KEY, todos);
   renderList();
   todoText.value = '';
@@ -55,21 +60,22 @@ function renderList() {
   for (var i = 0; i < todos.length; i++) {
     html.push([
       '<li data-index="' + todos[i].id + '">',
-       '<input type="button" value ="up" class="up"/>',
-        '<input type="button" value ="down" class="down"/>',
+       '<input type="button" value="⇧" class= "up" />',
+        '<input type="button" value="⇩" class= "down" />',
         '<input type="checkbox" ' + (todos[i].completed ? 'checked' : '') + '/>',
-        '<span>' + todos[i].title + '</span>',
+        '<span>' + todos[i].title + (todos[i].order) + '</span>',
         '<input type="button" value="&#xd7;" class="close"/>',
       '</li>'
     ].join(''));
     if (todos[i].completed) {
       completedCount++;
     }
+
   }
 
   document.getElementById('list-holder').innerHTML = html.join('');
 
-  todoStatus.innerHTML = (todos.length ? '(' + completedCount + ' of ' + todos.length + ' task completed)' : 'No todos');
+  todoStatus.innerHTML = (todos.length ? '(' + completedCount + ' of ' + todos.length  + ' task completed)' : 'No todos');
 }
 
 function newElement() {
@@ -120,9 +126,9 @@ todoList.addEventListener('click', function (e) {
   if (isDeleting) {
     removeTodo(todoIndex);
   } else if (isUp){
-    upTodo(todoIndex);
+    orderTodo(todoIndex, 'up');
   } else if (isDown){
-    downTodo(todoIndex);
+    orderTodo(todoIndex, 'down');
   }
   else {
     toggleCompleted(todoIndex);
@@ -159,36 +165,41 @@ function removeTodo(todoId) {
   }
 }
 
-function upTodo(todoId){
+function orderTodo(todoId, mode){
+  var todoIndex = -1, prevIndex, nextIndex;
   for (var i = 0; i < todos.length; i++) {
     if(todos[i].id === todoId){
-      todos[i].order++;
+      todoIndex = i;
       break;
     }
   }
 
-  setDataToLocalStorage(KEY, todos);
-  renderList();
-  
-}
+  if(todoIndex !== -1) {
+    prevIndex = todoIndex - 1;
+    nextIndex = todoIndex + 1;
 
-function downTodo(todoId){
-  for (var i = 0; i < todos.length; i++) {
-    if(todos[i].id === todoId){
-      todos[i].order--;
-      if(todos[i].order < 0){
-        todos[i].order = 0;
+    if (mode === 'up') {
+      if (todoIndex < todos.length - 1) {
+        todos[todoIndex].order = todos[todoIndex].order + 1;
       }
-      break;
+      if(nextIndex < todos.length) {
+        todos[nextIndex].order = todos[nextIndex].order - 1;
+      }
+    } else {
+      if (todoIndex !== 0) {
+        todos[todoIndex].order = todos[todoIndex].order - 1;
+      }
+      if(prevIndex >= 0) {
+        todos[prevIndex].order = todos[prevIndex].order + 1;
+      }
     }
+
+    setDataToLocalStorage(KEY, todos);
+    renderList();
   }
-  
-  setDataToLocalStorage(KEY, todos);
-  renderList();
-  
 }
 
-function getKey(){
+function getKey() {
   return Math.random().toString(36); 
 }
 renderList();
