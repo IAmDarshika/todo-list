@@ -1,15 +1,22 @@
 var todos, KEY = 'app-todos';
 var eButton = document.querySelector('#eButton'),
-  todoText = document.querySelector('#todoText'),
-  todoList = document.querySelector('#list-holder'),
-  todoStatus = document.querySelector('#todo-status'),
-  allChecked = document.querySelector('#allChecked'),
-  onlyChecked = document.querySelector('#onlyChecked'),
-  notChecked = document.querySelector('#notChecked');
+    todoText = document.querySelector('#todoText'),
+    todoList = document.querySelector('#list-holder'),
+    todoStatus = document.querySelector('#todo-status'),
+    allChecked = document.querySelector('#allChecked'),
+    onlyChecked = document.querySelector('#onlyChecked'),
+    notChecked = document.querySelector('#notChecked');
+
+
+todos = getDataFromLocalStorage(KEY);
+if (!todos) {
+  todos = [];
+  setDataToLocalStorage(KEY, todos);
+}
+
 
 function getDataFromLocalStorage(key) {
   var item = localStorage.getItem(key);
-  console.log(item);
   return JSON.parse(item);
 }
 
@@ -18,17 +25,7 @@ function setDataToLocalStorage(key, obj) {
   localStorage.setItem(key, strObj);
 }
 
-
-todos = getDataFromLocalStorage(KEY);
-
-
-if (!todos) {
-  todos = [];
-  setDataToLocalStorage(KEY, todos);
-}
-
-console.log(todos);
-
+//each todo added here
 function addTodo(todo) {
   todos.push(todo);
 
@@ -41,6 +38,7 @@ function addTodo(todo) {
   todoText.value = '';
 }
 
+//list is displayed with this
 function renderList() {
   var html = [], filter;
 
@@ -49,7 +47,7 @@ function renderList() {
   }
   else if (document.getElementById('onlyChecked').checked) {
     filter = document.getElementById('onlyChecked').value;
-  } else {
+  }else {
     filter= document.getElementById('notChecked').value;
   }
 
@@ -61,8 +59,7 @@ function renderList() {
   
   // todo status
   var status = '', completedCount = 0 , filterTodos;
-
-
+  
   filterTodos = todos.sort(function (a,b) {
     if(a.order < b.order){
       return -1;
@@ -86,8 +83,8 @@ function renderList() {
   for (var i = 0; i < filterTodos.length; i++) {
     html.push([
       '<li data-index="' + filterTodos[i].id + '">',
-       '<input type="button" value="⇧" class= "up" />',
-        '<input type="button" value="⇩" class= "down" />',
+       '<input type="button"  class= "up" />',
+        '<input type="button" class= "down" />',
         '<input type="checkbox" ' + (filterTodos[i].completed ? 'checked' : '') + '/>',
         '<span>' + filterTodos[i].title  + '</span>',
         '<input type="button" value="&#xd7;" class="close"/>',
@@ -96,7 +93,6 @@ function renderList() {
     if (filterTodos[i].completed) {
       completedCount++;
     }
-
   }
 
   document.getElementById('list-holder').innerHTML = html.join('');
@@ -115,74 +111,10 @@ function newElement() {
     title: newTodoText,
     completed: false,
     order: 0
-  }; //initialise object
+  }; 
 
   addTodo(newTodoObject);
 }
-
-eButton.addEventListener('click', function (e) {
-
-  newElement();
-});
-
-
-todoText.addEventListener('keydown', function (e) {
-  if (e.keyCode == 13) {
-    newElement();
-  }
-
-});
-
-allChecked.addEventListener('click', function (e){
-
-    renderList();
-});
-
-onlyChecked.addEventListener('click', function (e){
-
-  console.log(this.value);
-  renderList();
-  
-
-});
-
-notChecked.addEventListener('click', function (e){
-  console.log(this.value);
-  renderList();
-});
-
-
-
-todoList.addEventListener('click', function (e) {
-  var list,
-    todoIndex, isDeleting = false, isUp = false , isDown = false;
-  //console.log(e.target.tagName);
-
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SPAN' ) {
-    isDeleting = e.target.type === 'button' && e.target.classList.contains('close');
-    isUp = e.target.type === 'button' && e.target.classList.contains('up');
-    isDown = e.target.type === 'button' && e.target.classList.contains('down');
-    list = e.target.parentNode;
-  } else {
-    list = e.target;
-  }
-  todoIndex = list.getAttribute('data-index');
-
-
-  if (isDeleting) {
-    removeTodo(todoIndex);
-  } else if (isUp){
-    orderTodo(todoIndex, 'up');
-  } else if (isDown){
-    orderTodo(todoIndex, 'down');
-  }
-  else {
-    toggleCompleted(todoIndex);
-  }
-
-  //console.log(list.getAttribute('data-index'));
-})
-
 
 function toggleCompleted(todoId) {
   for (var i = 0; i < todos.length; i++) {
@@ -245,7 +177,70 @@ function orderTodo(todoId, mode){
   }
 }
 
+//generating keys randomly
 function getKey() {
-  return Math.random().toString(36); 
+ return Math.random().toString(36); 
 }
+
+//button event listener
+eButton.addEventListener('click', function (e) {
+
+  newElement();
+});
+
+//text added through enter button  
+todoText.addEventListener('keydown', function (e) {
+  if (e.keyCode == 13) {
+    newElement();
+  }
+
+});
+
+//radio buttons for filter
+allChecked.addEventListener('click', function (e){
+
+  renderList();
+});
+
+onlyChecked.addEventListener('click', function (e){
+
+  renderList();
+  
+});
+
+notChecked.addEventListener('click', function (e){
+
+  renderList();
+});
+
+todoList.addEventListener('click', function (e) {
+  var list,
+    todoIndex, isDeleting = false, isUp = false , isDown = false;
+  //console.log(e.target.tagName);
+
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SPAN' ) {
+    isDeleting = e.target.type === 'button' && e.target.classList.contains('close');
+    isUp = e.target.type === 'button' && e.target.classList.contains('up');
+    isDown = e.target.type === 'button' && e.target.classList.contains('down');
+    list = e.target.parentNode;
+  } else {
+    list = e.target;
+  }
+  todoIndex = list.getAttribute('data-index');
+
+
+  if (isDeleting) {
+    removeTodo(todoIndex);
+  } else if (isUp){
+    orderTodo(todoIndex, 'up');
+  } else if (isDown){
+    orderTodo(todoIndex, 'down');
+  }
+  else {
+    toggleCompleted(todoIndex);
+  }
+
+  //console.log(list.getAttribute('data-index'));
+})
+
 renderList();
