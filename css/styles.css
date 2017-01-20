@@ -124,16 +124,17 @@ main {
 }
 h2 {
   width: 100%;
-  padding-bottom: 20px;
+  padding-bottom: 40px;
   font-family: 'Gloria Hallelujah', cursive;
   font-size: 30px;
+  justify-content:center;
 }
 
 #todo-status{
   display: flex;
-  padding-right: 200px;
-  padding-bottom: 10px;
-  padding-left: 250px;
+  justify-content:center;
+  width:100%;
+  padding-bottom: 20px;
 }
 .addBtn:hover {
   background-color: #bbb;
@@ -166,6 +167,13 @@ button {
   font-size: 18px;
 }
 
+.filter{
+  display: flex;
+  justify-content: center;
+  width:100%;
+  padding-bottom: 20px;
 
+
+}
 
 /*# sourceMappingURL=../sourceMaps_css/styles.css.map */

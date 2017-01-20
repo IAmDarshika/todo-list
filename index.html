@@ -20,8 +20,15 @@
   <div class="todoList" "header">
   	 <h2>My To Do List</h2>
      <p id="todo-status"></p>
+     <div class="filter"> 
+      
+      <label><input type="radio" id="allChecked" value="all" name="filter" checked>All Todos </label>
+      <label><input type="radio" id="onlyChecked" value="completed" name="filter">Completed </label>
+      <label><input type="radio" id="notChecked" value="notcompleted" name="filter">Not Completed </label>
+
+     </div>
    	 <input type="text" id="todoText" placeholder="what you want to do?">
-     <button id="eButton" class="addBtn">Add</button>
+     <button id="eButton" class="addBtn">Add</button><br>
     
   </div>
     <ul id="list-holder" class="orderDsc">

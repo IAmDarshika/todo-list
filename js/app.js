@@ -2,7 +2,10 @@ var todos, KEY = 'app-todos';
 var eButton = document.querySelector('#eButton'),
   todoText = document.querySelector('#todoText'),
   todoList = document.querySelector('#list-holder'),
-  todoStatus = document.querySelector('#todo-status');
+  todoStatus = document.querySelector('#todo-status'),
+  allChecked = document.querySelector('#allChecked'),
+  onlyChecked = document.querySelector('#onlyChecked'),
+  notChecked = document.querySelector('#notChecked');
 
 function getDataFromLocalStorage(key) {
   var item = localStorage.getItem(key);
@@ -39,16 +42,28 @@ function addTodo(todo) {
 }
 
 function renderList() {
-  var html = [];
+  var html = [], filter;
+
+  if (document.getElementById('allChecked').checked) {
+    filter = document.getElementById('allChecked').value;
+  }
+  else if (document.getElementById('onlyChecked').checked) {
+    filter = document.getElementById('onlyChecked').value;
+  } else {
+    filter= document.getElementById('notChecked').value;
+  }
+
   if (!todos) {
    console.log('No todos');
    todoStatus.innerHTML = 'No todos';
    return;
-  } 
+  }
   
   // todo status
-  var status = '', completedCount = 0 ;
-  todos.sort(function (a,b) {
+  var status = '', completedCount = 0 , filterTodos;
+
+
+  filterTodos = todos.sort(function (a,b) {
     if(a.order < b.order){
       return -1;
     }
@@ -56,18 +71,29 @@ function renderList() {
       return 1;
     }
     return 0;
+  }).filter(function(todo) {
+      if(filter === 'all'){
+        return true;
+      }
+      if(filter === 'completed'){
+        return todo.completed;
+      }
+      if(filter === 'notcompleted'){
+        return !todo.completed;
+      }
   });
-  for (var i = 0; i < todos.length; i++) {
+
+  for (var i = 0; i < filterTodos.length; i++) {
     html.push([
-      '<li data-index="' + todos[i].id + '">',
+      '<li data-index="' + filterTodos[i].id + '">',
        '<input type="button" value="⇧" class= "up" />',
         '<input type="button" value="⇩" class= "down" />',
-        '<input type="checkbox" ' + (todos[i].completed ? 'checked' : '') + '/>',
-        '<span>' + todos[i].title + (todos[i].order) + '</span>',
+        '<input type="checkbox" ' + (filterTodos[i].completed ? 'checked' : '') + '/>',
+        '<span>' + filterTodos[i].title  + '</span>',
         '<input type="button" value="&#xd7;" class="close"/>',
       '</li>'
     ].join(''));
-    if (todos[i].completed) {
+    if (filterTodos[i].completed) {
       completedCount++;
     }
 
@@ -75,7 +101,7 @@ function renderList() {
 
   document.getElementById('list-holder').innerHTML = html.join('');
 
-  todoStatus.innerHTML = (todos.length ? '(' + completedCount + ' of ' + todos.length  + ' task completed)' : 'No todos');
+  todoStatus.innerHTML = (filterTodos.length ? '(' + completedCount + ' of ' + filterTodos.length  + ' task completed)' : 'No todos');
 }
 
 function newElement() {
@@ -106,6 +132,26 @@ todoText.addEventListener('keydown', function (e) {
   }
 
 });
+
+allChecked.addEventListener('click', function (e){
+
+    renderList();
+});
+
+onlyChecked.addEventListener('click', function (e){
+
+  console.log(this.value);
+  renderList();
+  
+
+});
+
+notChecked.addEventListener('click', function (e){
+  console.log(this.value);
+  renderList();
+});
+
+
 
 todoList.addEventListener('click', function (e) {
   var list,
